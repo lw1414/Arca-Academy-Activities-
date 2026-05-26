@@ -16,6 +16,7 @@
     --gold-1:#C6A559;
     --gold-2:#E6B979;
     --gold-deep:#8a6f33;
+    --gold-gradient:linear-gradient(135deg,#E6B979 0%,#C6A559 100%);
     --hero-scale:1;
     --hero-opacity:1;
     --hero-blur:0px;
@@ -40,8 +41,28 @@
     backdrop-filter:blur(10px);
     background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0));
   }
-  .nav .brand{display:flex;align-items:center;gap:12px;font-weight:500;letter-spacing:0.02em;font-size:14px}
-  .nav .brand img{width:26px;height:26px;display:block}
+  .nav .brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:0.01em;font-size:15px;position:relative}
+  .nav .brand img.brand-logo{
+    width:34px;height:34px;display:block;
+    filter:drop-shadow(0 0 8px rgba(230,185,121,0.55)) drop-shadow(0 0 18px rgba(198,165,89,0.35));
+    animation:brandPulse 6s ease-in-out infinite;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav .brand:hover img.brand-logo{transform:translateY(-1px) rotate(-2deg) scale(1.04)}
+  @keyframes brandPulse{
+    0%,100%{filter:drop-shadow(0 0 8px rgba(230,185,121,0.55)) drop-shadow(0 0 18px rgba(198,165,89,0.35))}
+    50%{filter:drop-shadow(0 0 14px rgba(230,185,121,0.78)) drop-shadow(0 0 28px rgba(198,165,89,0.55))}
+  }
+  .nav .brand .brand-word{
+    font-weight:700;letter-spacing:-0.01em;
+    text-shadow:0 0 14px rgba(230,185,121,0.35), 0 0 2px rgba(255,235,190,0.25);
+  }
+  .nav .brand .brand-word .tld{
+    background:var(--gold-gradient);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:none;
+    filter:drop-shadow(0 0 8px rgba(230,185,121,0.55));
+  }
   .nav .brand .dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--gold-2),var(--gold-1));box-shadow:0 0 12px rgba(230,185,121,0.6)}
   .nav ul{display:flex;gap:34px;list-style:none;margin:0;padding:0;font-size:12.5px;letter-spacing:0.14em;text-transform:uppercase;color:#bdbdbd;font-weight:400}
   .nav ul a{transition:color .25s ease}
@@ -86,8 +107,27 @@
     opacity:.5;
   }
 
+  /* BackgroundPaths — flowing gold curves layered above radial, below orbs */
+  .bg-paths{
+    position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;
+    -webkit-mask-image:radial-gradient(ellipse 60% 55% at 50% 50%, #000 30%, transparent 90%);
+            mask-image:radial-gradient(ellipse 60% 55% at 50% 50%, #000 30%, transparent 90%);
+  }
+  .bg-paths svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .bg-paths path{
+    fill:none;
+    stroke-linecap:round;
+    animation:pathFlow var(--flow-dur, 24s) linear infinite;
+    animation-delay:var(--flow-delay, 0s);
+  }
+  @keyframes pathFlow{
+    0%{stroke-dashoffset:0;opacity:.35}
+    50%{opacity:.65}
+    100%{stroke-dashoffset:-2000;opacity:.35}
+  }
+
   /* floating coins/orbs in hero like matveyan */
-  .orbs{position:absolute;inset:0;z-index:1;pointer-events:none}
+  .orbs{position:absolute;inset:0;z-index:2;pointer-events:none}
   .orb{position:absolute;width:64px;height:64px;border-radius:18px;
     background:linear-gradient(135deg,#1a1a1a,#0a0a0a);
     box-shadow:0 30px 60px -25px rgba(0,0,0,0.9),inset 0 1px 0 rgba(255,255,255,0.06);
@@ -112,7 +152,7 @@
     50%{transform:translateY(-14px) rotate(2deg)}
   }
 
-  .hero-inner{position:relative;z-index:2;padding:0 24px;max-width:1100px}
+  .hero-inner{position:relative;z-index:3;padding:0 24px;max-width:1100px}
   .eyebrow{
     display:inline-flex;align-items:center;gap:10px;
     font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:#9a9a9a;
@@ -151,6 +191,74 @@
   /* Sections */
   section.show{
     position:relative;padding:140px 36px;display:flex;justify-content:center;
+  }
+
+  /* ─── Brand section ─── */
+  .brand-section{
+    position:relative;padding:140px 36px 100px;
+    display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+    max-width:1240px;margin:0 auto;
+  }
+  .brand-section::before{
+    content:"";position:absolute;inset:-1px 0 0 0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(230,185,121,0.35),transparent);
+  }
+  .brand-copy .section-label{position:static;margin-bottom:28px;display:inline-flex}
+  .brand-copy h2{
+    font-size:clamp(34px,4.4vw,64px);font-weight:300;letter-spacing:-0.035em;
+    line-height:1.05;margin:0 0 22px;
+  }
+  .brand-copy h2 em{
+    font-style:normal;font-weight:500;
+    background:var(--gold-gradient);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .brand-copy p{color:#9a9a9a;font-size:14.5px;line-height:1.75;font-weight:300;max-width:46ch;margin:0 0 28px}
+  .brand-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .brand-chip{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:9px 14px;border:1px solid rgba(230,185,121,0.28);border-radius:999px;
+    font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#d9d9d9;font-weight:500;
+    background:rgba(230,185,121,0.04);
+    transition:border-color .3s ease, color .3s ease, background .3s ease;
+  }
+  .brand-chip:hover{border-color:var(--gold-2);color:var(--gold-2);background:rgba(230,185,121,0.09)}
+  .brand-chip .sw{width:12px;height:12px;border-radius:3px;background:var(--gold-gradient);box-shadow:0 0 10px rgba(230,185,121,0.45)}
+  .brand-chip .sw.mono{background:#fff}
+  .brand-chip .sw.deep{background:var(--gold-deep)}
+
+  .brand-frame{
+    position:relative;justify-self:end;width:100%;max-width:520px;
+    border-radius:24px;padding:14px;
+    background:linear-gradient(160deg,rgba(230,185,121,0.18),rgba(255,255,255,0.02));
+    border:1px solid rgba(230,185,121,0.22);
+    box-shadow:
+      0 40px 90px -30px rgba(0,0,0,0.9),
+      0 20px 60px -20px rgba(198,165,89,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease;
+  }
+  .brand-frame:hover{
+    transform:translateY(-6px);
+    box-shadow:
+      0 50px 110px -30px rgba(0,0,0,0.95),
+      0 28px 80px -16px rgba(230,185,121,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+  .brand-frame img{
+    display:block;width:100%;height:auto;border-radius:14px;
+    background:#0a0a0a;
+  }
+  .brand-frame .tag{
+    position:absolute;top:14px;right:14px;
+    font-size:9.5px;letter-spacing:0.32em;text-transform:uppercase;font-weight:600;
+    padding:6px 11px;border-radius:999px;color:#0c0700;
+    background:var(--gold-gradient);
+    box-shadow:0 8px 24px -8px rgba(230,185,121,0.55);
+  }
+  @media (max-width:880px){
+    .brand-section{grid-template-columns:1fr;gap:48px;padding:90px 20px 60px}
+    .brand-frame{justify-self:stretch;max-width:none}
   }
   .section-label{
     position:absolute;top:60px;left:36px;
@@ -426,8 +534,8 @@
 
 <nav class="nav">
   <a class="brand" href="#">
-    <img src="brand_assets/Tester Logo.png" alt="Tester.io logo" />
-    <span>Tester<span style="color:var(--gold-2)">.io</span></span>
+    <img class="brand-logo" src="brand_assets/Tester Logo.png" alt="Tester.io logo" />
+    <span class="brand-word">Tester<span class="tld">.io</span></span>
   </a>
   <ul>
     <li><a href="#platform">Platform</a></li>
@@ -440,6 +548,21 @@
 
 <header class="hero">
   <div class="hero-bg"></div>
+  <div class="bg-paths" id="bgPaths">
+    <svg viewBox="0 0 696 316" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="goldStroke" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#8a6f33"/>
+          <stop offset="50%" stop-color="#E6B979"/>
+          <stop offset="100%" stop-color="#C6A559"/>
+        </linearGradient>
+      </defs>
+      <g id="bgPathsGroupA"></g>
+    </svg>
+    <svg viewBox="0 0 696 316" preserveAspectRatio="xMidYMid slice" aria-hidden="true" style="transform:scaleX(-1)">
+      <g id="bgPathsGroupB"></g>
+    </svg>
+  </div>
   <div class="orbs">
     <div class="orb gold">
       <svg viewBox="0 0 24 24" fill="none" stroke="#0c0700" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -464,6 +587,25 @@
   </div>
   <div class="scroll-cue"><span>Scroll</span><span class="line"></span></div>
 </header>
+
+<!-- BRAND -->
+<section class="brand-section reveal" id="brand">
+  <div class="brand-copy">
+    <span class="section-label">00 — Brand</span>
+    <h2>One mark. <em>One gold.</em> One voice.</h2>
+    <p>The Tester.io system is intentionally tight — Montserrat across the page, a single 135° gradient from <strong style="color:#E6B979;font-weight:500">#E6B979</strong> to <strong style="color:#C6A559;font-weight:500">#C6A559</strong>, and one checkmark mark that does all the heavy lifting. Every button, every halo, every glow pulls from the same well.</p>
+    <div class="brand-chips">
+      <span class="brand-chip"><span class="sw"></span>Gold gradient</span>
+      <span class="brand-chip"><span class="sw deep"></span>Deep gold</span>
+      <span class="brand-chip"><span class="sw mono"></span>Mono surfaces</span>
+      <span class="brand-chip">Montserrat 300 / 500 / 700</span>
+    </div>
+  </div>
+  <div class="brand-frame">
+    <span class="tag">Brand Guidelines</span>
+    <img src="brand_assets/Brand Guidelines.png" alt="Tester.io brand guidelines — logo variations, color palette, typography, and button styles" />
+  </div>
+</section>
 
 <!-- DASH -->
 <section class="show" id="platform">
@@ -653,6 +795,30 @@
 </footer>
 
 <script>
+  // BackgroundPaths — port of the React/framer-motion component to vanilla SVG.
+  // Mirrors the math from the original; strokes use the gold linearGradient.
+  (function(){
+    function build(groupId, position){
+      const g = document.getElementById(groupId);
+      if(!g) return;
+      const SVG_NS = "http://www.w3.org/2000/svg";
+      for(let i=0;i<18;i++){
+        const d = `M-${380 - i*5*position} -${189 + i*6}C-${380 - i*5*position} -${189 + i*6} -${312 - i*5*position} ${216 - i*6} ${152 - i*5*position} ${343 - i*6}C${616 - i*5*position} ${470 - i*6} ${684 - i*5*position} ${875 - i*6} ${684 - i*5*position} ${875 - i*6}`;
+        const p = document.createElementNS(SVG_NS, "path");
+        p.setAttribute("d", d);
+        p.setAttribute("stroke", "url(#goldStroke)");
+        p.setAttribute("stroke-width", (0.5 + i*0.03).toFixed(2));
+        p.setAttribute("stroke-opacity", (0.08 + i*0.018).toFixed(3));
+        p.setAttribute("stroke-dasharray", "2000");
+        p.style.setProperty("--flow-dur", (20 + Math.random()*10).toFixed(1) + "s");
+        p.style.setProperty("--flow-delay", (-Math.random()*10).toFixed(1) + "s");
+        g.appendChild(p);
+      }
+    }
+    build("bgPathsGroupA", 1);
+    build("bgPathsGroupB", 1); // second SVG already mirrored via scaleX(-1)
+  })();
+
   // Hero scroll fade like matveyan
   const root = document.documentElement;
   function onScroll(){
